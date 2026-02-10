@@ -20,22 +20,23 @@ public class Pedido {
 
     public double calcularSubtotal() {
         double subtotal = 0;
+
         for (Producto producto : productos) {
             subtotal += producto.getPrecio();
         }
         return subtotal;
     }
 
-    public double aplicarDescuentos() {
-        double subtotal = calcularSubtotal();
-        if (subtotal > 3000) {
-            return subtotal * 0.05; // 5% descuento
-        }
-        return 0;
+    public boolean aplicarDescuentos() {
+        return calcularSubtotal() > 3000;
     }
 
     public double subtotalConDescuentos() {
-        return calcularSubtotal() - aplicarDescuentos();
+        double subtotal = calcularSubtotal();
+        if (aplicarDescuentos()) {
+            subtotal -= subtotal * 0.05;
+        }
+        return subtotal;
     }
 
     public double calcularTotalConIva() {
@@ -48,12 +49,16 @@ public class Pedido {
 
         for (int i = 0; i < productos.size(); i++) {
             Producto p = productos.get(i);
-            System.out.println("Producto " + (i + 1) + ": " 
-                + p.getNombre() + " - " + p.getPrecio() + " EUR");
+            System.out.println(
+                "Producto " + (i + 1) + ": "
+                + p.getNombre() + " - " + p.getPrecio() + " EUR"
+            );
         }
 
         System.out.println("Subtotal: " + calcularSubtotal());
-        System.out.println("Descuento: " + aplicarDescuentos());
+        System.out.println(
+            "Descuento: " + (aplicarDescuentos() ? calcularSubtotal() * 0.05 : 0)
+        );
         System.out.println("Total con IVA: " + calcularTotalConIva());
         System.out.println("----------------------------------");
     }
